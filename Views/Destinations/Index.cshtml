@@ -1,0 +1,136 @@
+@model IEnumerable<Tourism.Models.Destination>
+@using Tourism.Models
+@{
+    ViewData["Title"] = "Destinations";
+
+    // Read state from ViewData
+    string? q = ViewData["q"] as string;
+    var region = ViewData["region"] as Region?;
+    string? category = ViewData["category"] as string;
+    string? island = ViewData["island"] as string;
+    double? minRating = ViewData["minRating"] as double?;
+    bool popularOnly = (ViewData["popularOnly"] as bool?) ?? false;
+    string sort = (ViewData["sort"] as string) ?? "name_asc";
+
+    int currentPage = (ViewData["Page"] as int?) ?? 1;
+    int pageSize = (ViewData["PageSize"] as int?) ?? 10;
+    int total = (ViewData["Total"] as int?) ?? 0;
+    int totalPages = (ViewData["TotalPages"] as int?) ?? 1;
+
+    var categories = (IEnumerable<string>)(ViewData["Categories"] ?? Array.Empty<string>());
+    var islands = (IEnumerable<string>)(ViewData["Islands"] ?? Array.Empty<string>());
+
+    string QS(string key, string? val)
+    {
+        var dict = new Dictionary<string, string?>{
+            ["q"]=q, ["region"]=region?.ToString(), ["category"]=category,
+            ["island"]=island, ["minRating"]=minRating?.ToString(),
+            ["popularOnly"]=popularOnly ? "true" : null,
+            ["sort"]=sort, ["page"]=val
+        };
+        var parts = dict.Where(kv => !string.IsNullOrWhiteSpace(kv.Value))
+                        .Select(kv => $"{kv.Key}={kv.Value}");
+        return "?" + string.Join("&", parts);
+    }
+}
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Explore New Zealand</h1>
+    <p>Discover destinations and adventures across Aotearoa.</p>
+  </div>
+</section>
+
+@* <section class="info-pill">
+  <span class="icon" aria-hidden="true">🔔</span>
+  <span><strong>Did You Know?</strong> There are no snakes in New Zealand.</span>
+</section> *@
+
+<form method="get" class="controls">
+  <input type="search" name="q" value="@q" placeholder="Search (beaches, hiking, museums…)" />
+
+  <select name="region">
+    <option value="">All regions</option>
+    @foreach (var rv in Enum.GetValues(typeof(Region)))
+    {
+        var opt = rv.ToString();
+        <option value="@opt" @(region != null && region.ToString()==opt ? "selected" : "")>@opt</option>
+    }
+  </select>
+
+  <select name="category">
+    <option value="">All categories</option>
+    @foreach (var c in categories)
+    {
+        <option value="@c" @(c == category ? "selected" : "")>@c</option>
+    }
+  </select>
+
+  <select name="island">
+    <option value="">All islands</option>
+    @foreach (var i in islands)
+    {
+        <option value="@i" @(i == island ? "selected" : "")>@i</option>
+    }
+  </select>
+
+  <select name="minRating">
+    <option value="">Min rating</option>
+    @for (var r = 5; r >= 1; r--)
+    {
+        <option value="@r" @((minRating==r)? "selected" : "")>@r+</option>
+    }
+  </select>
+
+  <label style="display:flex;align-items:center;gap:.4rem;">
+    <input type="checkbox" name="popularOnly" value="true" @(popularOnly ? "checked" : "") />
+    Popular only
+  </label>
+
+  <select name="sort">
+    <option value="name_asc" @(sort=="name_asc"?"selected":"")>Name (A–Z)</option>
+    <option value="name_desc" @(sort=="name_desc"?"selected":"")>Name (Z–A)</option>
+    <option value="popular_desc" @(sort=="popular_desc"?"selected":"")>Most Popular</option>
+    <option value="rating_desc" @(sort=="rating_desc"?"selected":"")>Highest Rated</option>
+    <option value="rating_asc" @(sort=="rating_asc"?"selected":"")>Lowest Rated</option>
+    <option value="newest" @(sort=="newest"?"selected":"")>Newest</option>
+  </select>
+
+  <button class="btn" type="submit">Apply</button>
+</form>
+
+@* <p class="meta">@total results — page @page of @totalPages</p> *@
+<p class="meta">@total results — page @currentPage of @totalPages</p>
+
+
+<section class="card-grid">
+  @foreach (var d in Model)
+  {
+    <article class="card">
+      <div class="card-img"><img src="@d.ImageUrl" alt="@d.Name" /></div>
+      <div class="card-body">
+        <h3>@d.Name</h3>
+        <p>@d.Description</p>
+        <p class="muted">@d.Region • @d.Category • ⭐ @d.Rating</p>
+        <a class="btn btn-primary"
+          href="@Url.Action("Details", "Destinations", new { id = d.Id })">
+          Read More
+        </a>
+
+      </div>
+    </article>
+  }
+</section>
+
+<div class="pager">
+  <a class="btn"
+     href="@QS("page", (currentPage > 1 ? (currentPage - 1).ToString() : "1"))"
+     aria-disabled="@(currentPage==1)">Prev</a>
+
+  <span>Page @currentPage / @totalPages</span>
+
+  <a class="btn"
+     href="@QS("page", (currentPage < totalPages ? (currentPage + 1).ToString() : totalPages.ToString()))"
+     aria-disabled="@(currentPage==totalPages)">Next</a>
+</div>
+

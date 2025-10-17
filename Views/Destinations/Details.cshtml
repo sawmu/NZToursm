@@ -1,0 +1,43 @@
+@model Tourism.Models.Destination
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<article class="detail">
+  <header class="hero detail-hero">
+    <div class="hero-inner">
+      <h1>@Model.Name</h1>
+      <p>@Model.Region • @Model.Category • ⭐ @Model.Rating</p>
+    </div>
+  </header>
+
+  <div class="gallery" data-gallery>
+    <img src="@Model.ImageUrl" alt="@Model.Name hero photo" class="hero-img" />
+    @* <div class="thumbs">
+      <img src="@Model.ImageUrl" alt="thumb 1" />
+
+    </div> *@
+  
+  </div>
+
+  <p>@Model.Description</p>
+  
+  <p>
+    <a class="btn" href="@Url.Action("Index", "Destinations")">Back to list</a>
+  </p>
+
+
+</article>
+
+@section Scripts {
+<script>
+(function(){
+  const g = document.querySelector('[data-gallery]');
+  if(!g) return;
+  const hero = g.querySelector('.hero-img');
+  g.querySelectorAll('.thumbs img').forEach(img => {
+    img.addEventListener('click', () => { hero.src = img.src; });
+  });
+})();
+</script>
+}
