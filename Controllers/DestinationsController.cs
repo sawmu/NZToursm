@@ -44,7 +44,7 @@ public class DestinationsController : Controller
 
         IEnumerable<Destination> query = AppDb.Destinations;
 
-        // 🔎 Searching (name, description, category)
+        // Searching (name, description, category)
         if (!string.IsNullOrWhiteSpace(q))
         {
             var needle = q.Trim().ToLowerInvariant();
@@ -54,7 +54,7 @@ public class DestinationsController : Controller
                 d.Category.ToLowerInvariant().Contains(needle));
         }
 
-        // 🧰 Filtering
+        // Filtering
         if (region.HasValue) query = query.Where(d => d.Region == region.Value);
 
         if (!string.IsNullOrWhiteSpace(category))
@@ -80,7 +80,7 @@ public class DestinationsController : Controller
             _              => query.OrderBy(d => d.Name) // name_asc
         };
 
-        // 📄 Paging
+        // Paging
         var total = query.Count();
         var totalPages = Math.Max(1, (int)Math.Ceiling(total / (double)PageSize));
         var safePage = Math.Clamp(page, 1, totalPages);
