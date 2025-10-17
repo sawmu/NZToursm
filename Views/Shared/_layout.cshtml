@@ -11,7 +11,6 @@
 <meta property="og:title" content="@(ViewData["Title"] ?? "Explore New Zealand") · Tourism" />
 <meta property="og:description" content="@(ViewData["Description"] ?? "Discover top New Zealand destinations, activities, and travel ideas.")" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="@(Context?.Request?.Scheme + "://" + Context?.Request?.Host + Context?.Request?.Path)" />
 <meta property="og:image" content="@(ViewData["OgImage"] ?? Url.Content("~/img/og-default.jpg"))" />
 
 <!-- Twitter -->
@@ -20,8 +19,6 @@
 <meta name="twitter:description" content="@(ViewData["Description"] ?? "Discover top New Zealand destinations, activities, and travel ideas.")" />
 <meta name="twitter:image" content="@(ViewData["OgImage"] ?? Url.Content("~/img/og-default.jpg"))" />
 
-<!-- Canonical -->
-<link rel="canonical" href="@(Context?.Request?.Scheme + "://" + Context?.Request?.Host + Context?.Request?.Path)" />
 
 <!-- Styles -->
 <link rel="icon" href="~/favicon.ico" />
