@@ -1,6 +1,9 @@
 @model Tourism.Models.Destination
 @{
     ViewData["Title"] = Model.Name;
+    ViewData["Description"] = $"{Model.Name} — {Model.Region} • {Model.Category} • Rated {Model.Rating}/5";
+    ViewData["Keywords"] = $"{Model.Name}, {Model.Region}, {Model.Category}, New Zealand";
+    ViewData["OgImage"] = Model.ImageUrl; // use the main photo
 }
 
 <article class="detail">

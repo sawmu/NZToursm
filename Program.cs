@@ -18,7 +18,20 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        var path = ctx.File.PhysicalPath?.ToLowerInvariant();
+        if (path is not null && (path.EndsWith(".css") || path.EndsWith(".js") || path.EndsWith(".jpg")
+            || path.EndsWith(".jpeg") || path.EndsWith(".png") || path.EndsWith(".webp") || path.EndsWith(".svg")))
+        {
+            // Cache static assets for 30 days
+            ctx.Context.Response.Headers["Cache-Control"] = "public,max-age=2592000,immutable";
+        }
+    }
+});
+
 app.UseRouting();
 
 app.MapControllerRoute(

@@ -2,6 +2,9 @@
 @using Tourism.Models
 @{
     ViewData["Title"] = "Destinations";
+    ViewData["Description"] = "Browse New Zealand destinations with search, filters, sorting, and paging.";
+    ViewData["Keywords"] = "New Zealand destinations, filters, tourism, North Island, South Island";
+    ViewData["OgImage"] = Url.Content("~/img/og-destinations.jpg");
 
     // Read state from ViewData
     string? q = ViewData["q"] as string;
