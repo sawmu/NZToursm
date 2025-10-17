@@ -1,11 +1,5 @@
 # Tourism Web Application (ASP.NET Core MVC)
 
-**Author:** _[Your Name]_  
-**Course:** NZ Certificate in Aeronautical Engineering (Pre-employment) Level 3 — Web Development Module  
-**Date:** _[Insert Date]_  
-
----
-
 ## 📘 1. Introduction
 
 The **Tourism** website is an ASP.NET Core MVC application built for showcasing New Zealand tourist destinations.  
